@@ -1,6 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'sinatra'
+gem 'activesupport'
 gem 'sequel'
 gem 'sequel_pg'
 gem 'oj'
