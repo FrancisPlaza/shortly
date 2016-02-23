@@ -43,5 +43,11 @@ module Shortly
       end
     end
 
+    get '/:shortcode' do
+      wrap_in_rescue do
+        short_url = Shortly::ShortUrl.redirect(params['shortcode'])
+        redirect short_url.url, 302
+      end
+    end
   end
 end
