@@ -16,6 +16,9 @@ Dir["#{Shortly.root}/config/initializers/*.rb"].sort.each do |initializer_file|
   require(initializer_file)
 end
 
+require 'shortly/errors/shortly_error'
+
 require 'shortly/models/short_url'
+
 
 require 'shortly/api_service'

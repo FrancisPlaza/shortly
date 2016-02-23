@@ -12,15 +12,35 @@ module Shortly
       headers "Content-Type" => "application/json; charset=utf-8"
     end
 
+    helpers do
+      def wrap_in_rescue
+        begin
+          yield
+        rescue Shortly::ShortlyError => e
+          error = {error_code: e.http_status || 406, message: e.message}
+          error[:backtrace] = e.backtrace unless Shortly.production?
+          halt(e.http_status || 406, MultiJson.dump(error))
+        rescue Exception => e
+          error = {error_code: 406, message: e.message}
+          error[:backtrace] = e.backtrace unless Shortly.production?
+          halt(406, MultiJson.dump(error))
+        end
+      end
+    end
+
     get '/' do
       MultiJson.dump({app: 'Shortly', status: 'ok', version: Shortly::VERSION})
     end
 
     post '/shorten' do
-      req = MultiJson.load(request.body.read, symbolize_keys: true)
-      short_url = Shortly::Shortener.shorten(req[:url], req[:shortcode])
-      status 201
-      MultiJson.dump({shortcode: short_url.shortcode})
+      wrap_in_rescue do
+        req = MultiJson.load(request.body.read, symbolize_keys: true)
+        raise Shortly::ShortlyError.new(
+          "url is not present.", 400)if req[:url].blank?
+        short_url = Shortly::Shortener.shorten(req[:url], req[:shortcode])
+        status 201
+        MultiJson.dump({shortcode: short_url.shortcode})
+      end
     end
 
   end
