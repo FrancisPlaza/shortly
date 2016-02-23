@@ -45,8 +45,15 @@ module Shortly
 
     get '/:shortcode' do
       wrap_in_rescue do
-        short_url = Shortly::ShortUrl.redirect(params['shortcode'])
+        short_url = Shortly::Shortener.redirect(params['shortcode'])
         redirect short_url.url, 302
+      end
+    end
+
+    get '/:shortcode/stats' do
+      wrap_in_rescue do
+        response = Shortly::Shortener.stats(params['shortcode'])
+        MultiJson.dump(response)
       end
     end
   end

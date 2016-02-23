@@ -25,5 +25,22 @@ module Shortly
           "already in use.", 409)
       end
     end
+
+    def self.redirect(shortcode)
+      short_url = Shortly::ShortUrl.find(shortcode: shortcode)
+      raise Shortly::ShortlyError.new("The shortcode cannot be found " \
+        "in the system.", 404) if short_url.blank?
+      short_url.update_fields({redirect_count: short_url.redirect_count + 1,
+        updated_at: Time.now.utc}, [:redirect_count, :updated_at])
+    end
+
+    def self.stats(shortcode)
+      short_url = Shortly::ShortUrl.find(shortcode: shortcode)
+      raise Shortly::ShortlyError.new("The shortcode cannot be found " \
+        "in the system.", 404) if short_url.blank?
+      { startDate: short_url.created_at,
+        lastSeenDate: (short_url.updated_at if short_url.redirect_count > 0),
+        redirectCount: short_url.redirect_count }.reject{ |k,v| v.nil? }
+    end
   end
 end
