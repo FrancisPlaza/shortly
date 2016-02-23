@@ -1,0 +1,15 @@
+development:
+  adapter: postgres
+  encoding: unicode
+  database: shortly_development
+  pool: 5
+  username: postgres
+  password: 
+
+test:
+  adapter: postgres
+  encoding: unicode
+  database: shortly_test
+  pool: 5
+  username: postgres
+  password: 
