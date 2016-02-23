@@ -1,0 +1,15 @@
+.bundle
+.ruby-gemset
+.ruby-version
+.DS_Store
+
+# Ignore the coverage output
+/coverage
+
+# Ignore all logfiles and tempfiles
+/log/*.log
+/tmp
+/log
+
+# ignore local db config, copy from sample!
+/config/database.yml
