@@ -31,3 +31,4 @@ module Shortly
 end
 
 require 'shortly/util/web_logger'
+require 'shortly/util/strrand'
