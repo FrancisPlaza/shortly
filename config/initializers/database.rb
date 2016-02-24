@@ -1,4 +1,5 @@
 def pg_connection_string
+  return ENV['DATABASE_URL'] if Shortly.production?
   settings = YAML::load(File.read('config/database.yml'))[Shortly.env]
   settings['host'] ||= 'localhost'
   settings['port'] ||= '5432'
