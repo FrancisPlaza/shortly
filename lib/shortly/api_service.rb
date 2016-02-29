@@ -43,6 +43,16 @@ module Shortly
       end
     end
 
+    # for Tweetbot
+    get '/shorten' do
+      wrap_in_rescue do
+        raise Shortly::ShortlyError.new(
+          "url is not present.", 400)if params['url'].blank?
+        short_url = Shortly::Shortener.shorten(params['url'])
+        MultiJson.dump({shorturl: "kiko.im/#{short_url.shortcode}"})
+      end
+    end
+
     get '/:shortcode' do
       wrap_in_rescue do
         short_url = Shortly::Shortener.redirect(params['shortcode'])
